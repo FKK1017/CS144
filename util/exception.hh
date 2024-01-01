@@ -6,6 +6,8 @@
 #include <string_view>
 #include <system_error>
 
+#include <cstdint>
+
 class tagged_error : public std::system_error
 {
 private:

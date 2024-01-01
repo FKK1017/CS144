@@ -27,8 +27,23 @@ public:
    *
    * The Reassembler should close the stream after writing the last byte.
    */
+  explicit Reassembler();
+
   void insert( uint64_t first_index, std::string data, bool is_last_substring, Writer& output );
 
   // How many bytes are stored in the Reassembler itself?
   uint64_t bytes_pending() const;
+
+private:
+  // key:first_index, value:data
+  // std::unordered_map<uint64_t, std::string> _data_stordered;
+
+  std::string _reassembler;
+  std::vector<bool> _is_data;
+
+  uint64_t _bytes_pending = 0;
+
+  uint64_t _sended_index = 0;
+
+  bool _last_got = false;
 };

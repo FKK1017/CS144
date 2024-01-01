@@ -24,6 +24,33 @@ void Router::add_route( const uint32_t route_prefix,
   (void)prefix_length;
   (void)next_hop;
   (void)interface_num;
+  route_table_.emplace_back(route_datagram {route_prefix, prefix_length, next_hop, interface_num});
 }
 
-void Router::route() {}
+void Router::route() {
+  for (auto &interface_temp:interfaces_) {
+    while (optional<InternetDatagram> dg = interface_temp.maybe_receive()) {
+      if (dg.has_value()) {
+        const uint32_t ipdst = dg.value().header.dst;
+        auto largest_prefix_match_route = route_table_.end();
+        for (auto r=route_table_.begin(); r!=route_table_.end(); r++) {
+          if (r->prefix_length==0 || 
+          (r->route_prefix ^ ipdst) >> (static_cast<uint8_t>(32) - r->prefix_length) == 0) {
+            if (largest_prefix_match_route==route_table_.end() || largest_prefix_match_route->prefix_length < r->prefix_length) {
+              largest_prefix_match_route = r;
+            }
+          }
+        }
+
+        uint8_t &dg_ttl = dg.value().header.ttl;
+        if (largest_prefix_match_route!=route_table_.end() && dg_ttl>1) {
+          dg_ttl--;
+          dg.value().header.compute_checksum();
+          const Address n_hop = (largest_prefix_match_route->next_hop.has_value() ? largest_prefix_match_route->next_hop.value()
+          : Address::from_ipv4_numeric(dg.value().header.dst));
+          interface(largest_prefix_match_route->interface_num).send_datagram(dg.value(), n_hop);
+        }
+      }
+    }
+  }
+}

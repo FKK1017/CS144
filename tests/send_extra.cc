@@ -18,6 +18,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -42,6 +43,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -66,6 +68,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -91,6 +94,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -120,6 +124,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -158,6 +163,7 @@ int main()
     }
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       cfg.fixed_isn = isn;
 
@@ -190,6 +196,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -213,6 +220,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -245,6 +253,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -270,6 +279,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -297,6 +307,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -327,6 +338,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -395,6 +407,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -440,6 +453,7 @@ int main()
 
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       const size_t rto = uniform_int_distribution<uint16_t> { 30, 10000 }( rd );
       cfg.fixed_isn = isn;
@@ -463,9 +477,9 @@ int main()
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
       test.execute( ExpectNoSegment {} );
-      test.execute( Push( "ijkl" ).with_close() );
+      test.execute( Push( "hjkl" ).with_close() );
       test.execute(
-        ExpectMessage {}.with_payload_size( 4 ).with_data( "ijkl" ).with_seqno( isn + 8 ).with_fin( true ) );
+        ExpectMessage {}.with_payload_size( 4 ).with_data( "hjkl" ).with_seqno( isn + 8 ).with_fin( true ) );
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
@@ -478,7 +492,7 @@ int main()
       test.execute( AckReceived { Wrap32 { isn + 1 } }.with_win( 1000 ) );
       test.execute( Tick { 5 * rto } );
       test.execute(
-        ExpectMessage {}.with_payload_size( 4 ).with_data( "ijkl" ).with_seqno( isn + 8 ).with_fin( true ) );
+        ExpectMessage {}.with_payload_size( 4 ).with_data( "hjkl" ).with_seqno( isn + 8 ).with_fin( true ) );
       test.execute( ExpectNoSegment {} );
       test.execute( AckReceived( Wrap32 { isn + 13 } ).with_win( 1000 ) );
       test.execute( AckReceived( Wrap32 { isn + 1 } ).with_win( 1000 ) );
@@ -490,6 +504,7 @@ int main()
     // test credit: DD152
     {
       TCPConfig cfg;
+      cout << "a\n";
       const Wrap32 isn( rd() );
       cfg.fixed_isn = isn;
       const string nicechars = "abcdefghijklmnopqrstuvwxyz";

@@ -41,6 +41,17 @@ private:
   // IP (known as Internet-layer or network-layer) address of the interface
   Address ip_address_;
 
+  std::queue<EthernetFrame> outbound_frames_ {}; // sending queue
+
+  std::list<std::pair<Address, InternetDatagram>> waiting_IPdatagram_ {}; // waiting IP
+
+  std::unordered_map<uint32_t, std::pair<EthernetAddress, size_t>> address_table_ {}; // less than 30s
+  // std::unordered_map<uint32_t, size_t> address_table_ttl_{};
+  std::unordered_map<uint32_t, size_t> arp_req_lifetime_ {}; // less than 5s
+
+  const size_t ARP_DEFAULT_LIFE_TIME = static_cast<size_t>( 5 * 1000 );
+  const size_t ARP_ETH_IP_LIFE_TIME = static_cast<size_t>( 30 * 1000 );
+
 public:
   // Construct a network interface with given Ethernet (network-access-layer) and IP (internet-layer)
   // addresses

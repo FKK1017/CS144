@@ -10,6 +10,7 @@
 #include <utility>
 #include <vector>
 
+#include <cstdint>
 class ExpectationViolation : public std::runtime_error
 {
 public:

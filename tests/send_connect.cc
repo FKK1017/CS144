@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <iostream>
+
 using namespace std;
 
 int main()
@@ -45,6 +47,7 @@ int main()
     }
 
     {
+      cout << "3\n";
       TCPConfig cfg;
       const Wrap32 isn( rd() );
       cfg.fixed_isn = isn;
@@ -61,6 +64,7 @@ int main()
     }
 
     {
+      cout << "4\n";
       TCPConfig cfg;
       const Wrap32 isn( rd() );
       cfg.fixed_isn = isn;
