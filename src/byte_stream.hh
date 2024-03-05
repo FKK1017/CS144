@@ -19,10 +19,10 @@ protected:
   uint64_t bytes_pushed_ = 0;
   uint64_t bytes_popped_ = 0;
   bool closed_ = false;
-  bool finished_ = false;
   bool error_ = false;
 
   std::queue<std::string> bytestream_;
+  std::string_view bytestream_view {};
 
 public:
   explicit ByteStream( uint64_t capacity );

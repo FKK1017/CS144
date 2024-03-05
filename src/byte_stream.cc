@@ -26,20 +26,18 @@ void Writer::push( string data )
     return;
   }
 
-  uint64_t lasted_ = capacity_ - ( bytes_pushed_ - bytes_popped_ );
-
-  if ( lasted_ >= data.size() ) {
-    for ( auto x : data ) {
-      bytestream_.push( std::string( 1, x ) );
-      bytes_pushed_++;
-    }
-  } else {
-    for ( uint64_t i = 0; i < lasted_; i++ ) {
-      bytestream_.push( std::string( 1, data[i] ) );
-      // write_pos_ ++ ;
-      bytes_pushed_++;
-    }
+  auto len = min(available_capacity(), data.size());
+  if (len == 0) {
+    return;
+  } else if (len < data.size()) {
+    data.resize(len);
   }
+
+  bytestream_.push(move(data));
+  if (bytestream_.size() == 1) {
+    bytestream_view = bytestream_.front();
+  }
+  bytes_pushed_ += len;
 }
 
 void Writer::close()
@@ -51,8 +49,6 @@ void Writer::close()
   }
 
   closed_ = true;
-  if ( bytes_pushed_ == bytes_popped_ )
-    finished_ = true;
 }
 
 void Writer::set_error()
@@ -70,7 +66,7 @@ bool Writer::is_closed() const
 uint64_t Writer::available_capacity() const
 {
   // Your code here.
-  return { capacity_ - ( bytes_pushed_ - bytes_popped_ ) };
+  return { capacity_ - reader().bytes_buffered() };
 }
 
 uint64_t Writer::bytes_pushed() const
@@ -82,17 +78,13 @@ uint64_t Writer::bytes_pushed() const
 string_view Reader::peek() const
 {
   // Your code here.
-  if ( bytestream_.empty() ) {
-    return {};
-  } else {
-    return bytestream_.front();
-  }
+  return bytestream_view;
 }
 
 bool Reader::is_finished() const
 {
   // Your code here.
-  return { finished_ };
+  return { writer().is_closed() && bytes_buffered()==0};
 }
 
 bool Reader::has_error() const
@@ -104,20 +96,36 @@ bool Reader::has_error() const
 void Reader::pop( uint64_t len )
 {
   // Your code here.
-  (void)len;
-  for ( uint64_t i = 0; i < len; i++ ) {
-    bytestream_.pop();
-    bytes_popped_++;
+  // (void)len;
+  // for ( uint64_t i = 0; i < len; i++ ) {
+  //   bytestream_.pop();
+  //   bytes_popped_++;
+  // }
+
+  // if ( closed_ && ( bytes_buffered() == 0 ) )
+  //   finished_ = true;
+  if (len > bytes_buffered()) {
+    return;
   }
 
-  if ( closed_ && ( bytes_buffered() == 0 ) )
-    finished_ = true;
+  bytes_popped_ += len;
+
+  while (len > 0) {
+    if (len >= bytestream_view.size()) {
+      len -= bytestream_view.size();
+      bytestream_.pop();
+      bytestream_view = bytestream_.front();
+    } else {
+      bytestream_view.remove_prefix(len);
+      len = 0;
+    }
+  }
 }
 
 uint64_t Reader::bytes_buffered() const
 {
   // Your code here.
-  return { bytes_pushed_ - bytes_popped_ };
+  return { writer().bytes_pushed() - bytes_popped_ };
 }
 
 uint64_t Reader::bytes_popped() const
